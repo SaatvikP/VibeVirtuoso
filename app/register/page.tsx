@@ -41,7 +41,7 @@ export default function RegisterPage() {
     }
   }
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
@@ -53,14 +53,34 @@ export default function RegisterPage() {
 
     setIsLoading(true)
 
-    // Simulate registration delay
-    setTimeout(() => {
-      // In a real app, you would create the user account here
-      setIsLoading(false)
+    try {
+      // Call the database API to register user
+      const response = await fetch("http://localhost:8001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: email.split("@")[0], // Use email prefix as username
+          email: email,
+          password: password,
+          full_name: name,
+        }),
+      })
 
-      // Redirect to home page after successful registration
-      router.push("/")
-    }, 1500)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Registration failed")
+      }
+
+      // Registration successful
+      setIsLoading(false)
+      router.push("/signin?message=Registration successful! Please sign in.")
+    } catch (error) {
+      setIsLoading(false)
+      setError(error instanceof Error ? error.message : "Registration failed")
+    }
   }
 
   return (

@@ -88,11 +88,11 @@ export default function LandingPage() {
             <Link href="/music" className="text-sm font-medium hover:text-purple-200 transition-colors">
               Explore
             </Link>
+            <Link href="/studio" className="text-sm font-medium hover:text-purple-200 transition-colors">
+              🎹 Studio
+            </Link>
             {isAuthenticated ? (
               <>
-                <Link href="/dashboard" className="text-sm font-medium hover:text-purple-200 transition-colors">
-                  Dashboard
-                </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-1 hover:bg-white/10">
@@ -111,8 +111,8 @@ export default function LandingPage() {
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => router.push("/dashboard")}>Dashboard</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/create")}>Create New Composition</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/studio")}>🎹 Music Studio</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/studio")}>Create New Composition</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
                       <LogOut className="mr-2 h-4 w-4" />
@@ -162,9 +162,9 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   className="bg-white text-purple-700 hover:bg-purple-100 px-8 text-lg font-bold"
-                  onClick={() => router.push(isAuthenticated ? "/dashboard" : "/signin")}
+                  onClick={() => router.push(isAuthenticated ? "/studio" : "/signin")}
                 >
-                  {isAuthenticated ? "Go to Dashboard" : "Start Making Music"}
+                  {isAuthenticated ? "🎹 Go to Studio" : "Start Making Music"}
                 </Button>
               </div>
             </div>
@@ -226,16 +226,16 @@ export default function LandingPage() {
               </h2>
               <p className="mx-auto max-w-[700px] text-xl text-white/80">
                 {isAuthenticated
-                  ? "Jump back into your projects or start something new with VibeVirtuoso."
+                  ? "Jump back into the studio or start something new with gesture-controlled music creation."
                   : "Jump right in and start creating your own musical masterpieces with VibeVirtuoso."}
               </p>
               <div>
                 <Button
                   size="lg"
                   className="bg-white text-purple-700 hover:bg-purple-100 px-8 text-lg font-bold"
-                  onClick={() => router.push(isAuthenticated ? "/dashboard" : "/signin")}
+                  onClick={() => router.push(isAuthenticated ? "/studio" : "/signin")}
                 >
-                  {isAuthenticated ? "Go to Dashboard" : "Sign In to Get Started"}
+                  {isAuthenticated ? "🎹 Go to Studio" : "Sign In to Get Started"}
                 </Button>
               </div>
               <p className="text-sm text-white/70">No musical experience required. Just bring your creativity!</p>
@@ -259,11 +259,10 @@ export default function LandingPage() {
               <Link href="/music" className="text-sm hover:text-white">
                 Explore
               </Link>
-              {isAuthenticated ? (
-                <Link href="/dashboard" className="text-sm hover:text-white">
-                  Dashboard
-                </Link>
-              ) : (
+              <Link href="/studio" className="text-sm hover:text-white">
+                🎹 Studio
+              </Link>
+              {!isAuthenticated && (
                 <Link href="/signin" className="text-sm hover:text-white">
                   Sign In
                 </Link>

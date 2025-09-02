@@ -89,12 +89,29 @@ while True:
 
     if results.multi_hand_landmarks:
         for i, hand_landmarks in enumerate(results.multi_hand_landmarks):
-            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-            finger_count = count_extended_fingers(hand_landmarks)
             is_right = is_right_hand(hand_landmarks, w)
+            
+            # Color code: Green for right hand (piano), Purple for left hand (chords)
+            hand_color = (0, 255, 0) if is_right else (128, 0, 128)  # Green or Purple
+            connection_color = (0, 200, 0) if is_right else (100, 0, 100)  # Lighter versions
+            
+            # Draw landmarks with color coding
+            mp_draw.draw_landmarks(
+                frame, hand_landmarks, mp_hands.HAND_CONNECTIONS,
+                landmark_drawing_spec=mp_draw.DrawingSpec(color=hand_color, thickness=2, circle_radius=2),
+                connection_drawing_spec=mp_draw.DrawingSpec(color=connection_color, thickness=2)
+            )
+            
+            finger_count = count_extended_fingers(hand_landmarks)
 
             if is_right:
                 # 🎹 Right hand piano
+                # Display finger count for right hand
+                wrist = hand_landmarks.landmark[0]
+                cv2.putText(frame, f"R: {finger_count}", 
+                           (int(wrist.x * w) + 20, int(wrist.y * h) - 20),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                
                 if finger_count in MELODY_MAP:
                     note = MELODY_MAP[finger_count]
                     if note != last_piano_note:
@@ -110,8 +127,14 @@ while True:
 
             else:
                 # 🎻 Left hand strings + dynamics
-                wrist_y = hand_landmarks.landmark[0].y * h
+                wrist = hand_landmarks.landmark[0]
+                wrist_y = wrist.y * h
                 current_synth_fingers = finger_count
+                
+                # Display finger count for left hand
+                cv2.putText(frame, f"L: {finger_count}", 
+                           (int(wrist.x * w) + 20, int(wrist.y * h) - 20),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (128, 0, 128), 2)
 
                 if finger_count != last_synth_fingers:
                     stop_synth()
@@ -144,23 +167,21 @@ while True:
             last_piano_note = None
         stop_synth()
         last_synth_fingers = -1
+    # UI
+    cv2.putText(frame, "Right: Piano 🎹 | Left: Strings 🎻", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+
+    if current_synth_fingers in SYNTH_CHORDS:
+        cv2.putText(frame, f"Layer: {layer}", (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 220, 180), 2)
+
+    cv2.imshow("Gesture Piano + Strings", frame)
+
+    if cv2.waitKey(1) & 0xFF == 27:
+        break
+
+# Cleanup
+piano.delete()
+synth.delete()
+cap.release()
 cv2.destroyAllWindows()
-exit(0)
-    # # UI
-    # cv2.putText(frame, "Right: Piano 🎹 | Left: Strings 🎻", (10, 30),
-    #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-
-    # if current_synth_fingers in SYNTH_CHORDS:
-    #     cv2.putText(frame, f"Layer: {layer}", (10, 60),
-    #                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 220, 180), 2)
-
-    # cv2.imshow("Gesture Piano + Strings", frame)
-
-    # if cv2.waitKey(1) & 0xFF == 27:
-    #     break
-
-# # Cleanup
-# piano.delete()
-# synth.delete()
-# cap.release()
-# cv2.destroyAllWindows()

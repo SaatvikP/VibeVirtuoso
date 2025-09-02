@@ -39,18 +39,32 @@ export default function SignInPage() {
     }
   }
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const [error, setError] = useState("")
+
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     setIsLoading(true)
 
-    // Simulate authentication delay
-    setTimeout(() => {
-      // In a real app, you would validate credentials here
-      setIsLoading(false)
+    // Simple mock authentication for demo - accept any email/password
+    if (email && password) {
+      // Mock delay to simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Store mock user data
+      if (typeof window !== "undefined") {
+        localStorage.setItem("auth_token", "mock_token_123")
+        localStorage.setItem("user_id", "demo_user")
+        localStorage.setItem("username", email.split("@")[0])
+      }
 
+      setIsLoading(false)
       // Use the handleLogin function to set auth state and redirect
       handleLogin(router)
-    }, 1000)
+    } else {
+      setIsLoading(false)
+      setError("Please enter both email and password")
+    }
   }
 
   return (
@@ -96,6 +110,12 @@ export default function SignInPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 bg-red-100 border border-red-200 text-red-600 text-sm rounded-md dark:bg-red-900/30 dark:border-red-800 dark:text-red-400">
+                  {error}
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input

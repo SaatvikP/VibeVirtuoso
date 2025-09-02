@@ -39,10 +39,10 @@ export const clearAuthState = () => {
   }
 }
 
-// Add a function to handle login that redirects to home
+// Add a function to handle login that redirects to studio
 export const handleLogin = (router: any) => {
   setAuthState(true)
-  router.push("/")
+  router.push("/studio")
 }
 
 // Add a function to handle logout that redirects to home

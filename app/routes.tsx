@@ -5,7 +5,7 @@ export const routes = {
   explore: "/music",
   signin: "/signin",
   register: "/register",
-  dashboard: "/dashboard",
+  studio: "/studio",
   create: "/create",
   editor: "/editor",
 }

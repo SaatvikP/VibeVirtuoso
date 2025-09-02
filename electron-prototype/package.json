@@ -1,0 +1,44 @@
+{
+  "name": "vibevirtuoso-desktop",
+  "version": "1.0.0",
+  "description": "Desktop version of VibeVirtuoso with native Python integration",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir"
+  },
+  "keywords": ["music", "gesture", "mediapipe", "electron"],
+  "author": "VibeVirtuoso Team",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2"
+  },
+  "build": {
+    "appId": "com.vibevirtuoso.desktop",
+    "productName": "VibeVirtuoso",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js", 
+      "renderer/**/*",
+      "python-backend/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.music"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
